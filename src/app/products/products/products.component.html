@@ -1,0 +1,130 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between alighn-items-center">
+    <h2>Product List</h2>
+    <button class="btn btn-primary" type="button" (click)="open(content)">
+      Add New Product
+    </button>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Rating</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products">
+        <td>{{ product.id }}</td>
+        <td>{{ product.name }}</td>
+        <td>{{ product.category }}</td>
+        <td>{{ product.price }}</td>
+        <td>{{ product.rating }}</td>
+        <td>
+          <button
+            class="btn btn-info"
+            style="margin-right: 5px"
+            (click)="edit(product, content)"
+          >
+            Edit
+          </button>
+
+          <button class="btn btn-danger" (click)="deleteProduct(product.id)">
+            <span *ngIf="deleteloading">Deleting...</span>
+            <span *ngIf="!deleteloading">Delete</span>
+          </button>
+        </td>
+      </tr>
+
+      <tr *ngIf="!products.length">
+        <td colspan="5">No products added</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Add new product</h4>
+  </div>
+  <div class="modal-body">
+    <form class="row g-3" [formGroup]="productForm" (ngSubmit)="onSubmit()">
+      <div class="col-md-12">
+        <label for="name" class="form-label">Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          formControlName="name"
+          placeholder="Name"
+          [ngClass]="{
+            'is-invalid':
+              productForm.get('name')?.invalid &&
+              productForm.get('name')?.touched
+          }"
+        />
+        <div id="name" class="invalid-feedback">Name is required</div>
+      </div>
+
+      <div class="col-md-12">
+        <label for="price" class="form-label">Price</label>
+        <input
+          type="text"
+          class="form-control"
+          id="price"
+          formControlName="price"
+          placeholder="Price"
+          [ngClass]="{
+            'is-invalid':
+              productForm.get('price')?.invalid &&
+              productForm.get('price')?.touched
+          }"
+        />
+        <div id="name" class="invalid-feedback">Name is required</div>
+      </div>
+
+      <div class="col-md-12">
+        <label for="category" class="form-label">Category</label>
+
+        <select
+          class="form-select"
+          id="category"
+          placeholder="Selecte Category"
+          formControlName="category"
+          [ngClass]="{
+            'is-invalid':
+              productForm.get('category')?.invalid &&
+              productForm.get('category')?.touched
+          }"
+        >
+          <option value="Laptop" selected>Laptop</option>
+          <option value="Mobile">Mobile</option>
+          <option value="Computer">Computer</option>
+        </select>
+        <div id="name" class="invalid-feedback">Category is required</div>
+      </div>
+      <div class="col-md-12">
+        <button
+          type="submit"
+          class="btn btn-primary disabled"
+          [ngClass]="{ disabled: loading }"
+        >
+          <span *ngIf="loading">Loading...</span>
+          <span *ngIf="!loading">Save Product</span>
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="modal.close('Close click')"
+    >
+      Close
+    </button>
+  </div>
+</ng-template>
